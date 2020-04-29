@@ -1,33 +1,27 @@
 /**
  * Identifier.java
- * Noah Huck
- * CS4308
- * Section 03
- * 22 March 2019
+ * 
  */
 
-//package pkg;
+//Identifier class protected keyword determines subclasses
+//access to key variables.
 
 public abstract class Identifier {
-    
-    // class provides a framework for identifier subclasses of different types
-    // protected keyword chosen to give subclasses access to these variables.
-    
-    final protected String name;
-    final protected int type;
+        
+    final protected String name; //String value
+    final protected int type;   //integer cast 
     
     public Identifier(String name, int type){
-        this.name = name;
-        this.type = type;
+        this.name = name; //set String declaration
+        this.type = type; //set int type casting
     }
     public String getName(){
-        return name;
+        return name; //method that returns a String output upon execution
     }
     public int getType(){
-        return type;
+        return type; //method that returns an integer output upon execution
     }
-    //abstract methods present so objects cast as Identifier can use these methods
-    public abstract String getValue();
-    public abstract void setValue(String value);
+    public abstract String getValue(); //Instantiate a String getValue call
+    public abstract void setValue(String value); //setValue return String
 }
 
