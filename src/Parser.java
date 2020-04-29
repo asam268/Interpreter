@@ -179,16 +179,23 @@ public class Parser {
     }
     
     //Declaration Parsing
-    private void variables() {      //parses for variable declaration statements
-        /** BNF: comp_declare -> DEFINE data_declaration */
+
+    /**
+     * Parses for variable declaration statements
+     * comp_declare -> DEFINE data_declaration
+     */
+    private void variables() {
         while(nextTok == Constants.DEFINE){
             wsal.add(nextLex);
             scan();
             dataDeclaration();
         }
-    }  
+    }
+
+    /**
+     * data_declaration -> IDENTIFIER OF TYPE data_type
+     */
     private void dataDeclaration() {
-        /** BNF: data_declaration -> IDENTIFIER OF TYPE data_type */
         if (nextTok == Constants.IDENT) {
             wsal.add(nextLex);
             lookup(nextLex); 
@@ -212,13 +219,16 @@ public class Parser {
             error("Invalid Identifier name", scanner.getRow(), true);
         }
     }
-    private void type() { 
-        /* In BNF, the non-terminal associated with this method is only found in data declarations.
-        accordingly, this is the only place identifiers are declared and added to the identifier table.*/
-        /** BNF: data_type -> INTEGER | TSTRING */
+
+    /**
+     * In BNF, the non-terminal associated with this method is only found in data declarations.
+     * accordingly, this is the only place identifiers are declared and added to the identifier table.
+     * data_type -> INTEGER | TSTRING
+     */
+    private void type() {
         switch (nextTok){
             case Constants.INTEGER:
-                // Decision made here to set default value of unassigned integers to 0.
+                //default value of unassigned integers are 0.
                 idTable.add(new IntegerIdentifier(this.activeIdentifierName, Constants.INTEGER, 0));  
                 wsal.add(nextLex);
                 flush();
@@ -234,8 +244,11 @@ public class Parser {
                 error("Type not supported.", scanner.getRow(), true);
         }
     }
-    
-    //Function Body Parsing:
+
+    /**
+     * Begin parsing
+     * BEGIN pactions
+     */
     private void begin(){
         /* BNF: BEGIN pactions */
         while (nextTok != Constants.ENDFUNCTION){
@@ -245,15 +258,19 @@ public class Parser {
             scan();
         }
     }
+
+    /**
+     * action_def -> SET name_ref EQUOP expr
+     *             | INPUT name_ref
+     *             | DISPLAY pvar_value_list
+     *             | INCREMENT name_ref
+     *             | DECREMENT name_ref
+     *             | IF pcondition THEN pactions opt_else ENDIF
+     *             | WHILE pcondition DO pactions ENDWHIL
+     *
+     */
     private void actions() {
-        /* BNF: action_def -> SET name_ref EQUOP expr
-            | INPUT name_ref
-            | DISPLAY pvar_value_list
-            | INCREMENT name_ref
-            | DECREMENT name_ref
-            | IF pcondition THEN pactions opt_else ENDIF
-            | WHILE pcondition DO pactions ENDWHIL
-        */
+
         //actions() method is only looking for the first keyword from each RHS to determine proper method to call.
             switch (nextTok){
                 case Constants.SET:
@@ -302,10 +319,10 @@ public class Parser {
             }
     }
 
-    //Actions Parsing:
+    /**
+     * BNF: SET name_ref EQUOP expr
+     */
     private void assignment() {
-        /** BNF: SET name_ref EQUOP expr */
-        
         if (nextTok == Constants.IDENT){
             // this call is necessary to establish current identifier as active
             lookup(nextLex);        
@@ -320,17 +337,6 @@ public class Parser {
                     assignmentStatement = new AssignmentStatement(id, expr());
                 } else
                     expr();
-                /**** Code replaced by AssignmentStatement.java ****/
-//                int i = idTable.get(activeIdentifier).getType();
-//                if (i == INTEGER){
-//                    IntegerIdentifier id = (IntegerIdentifier)idTable.get(activeIdentifier);
-//                    System.err.println(id.toString());
-//                    id.setValue(Integer.parseInt(expr()));
-//                }
-//                else {
-//                    StringIdentifier id = (StringIdentifier)idTable.get(activeIdentifier);
-//                    id.setValue(expr());
-//                }
             }
             else {
                 error("Invalid syntax for assignment operation", scanner.getRow(), true);
@@ -339,10 +345,13 @@ public class Parser {
             error("Invalid syntax for assignment operation", scanner.getRow(), true);
         }
     }
+    /**
+     * BNF: INPUT name_ref
+     * BNF sample contradicts sample file where a string is included.
+     * Actual implementation here allows for INPUT string_literal COMMA name_ref
+     */
     private void input() {
-        /** BNF: INPUT name_ref
-        BNF sample contradicts sample file where a string is included.
-        Actual implementation here allows for INPUT string_literal COMMA name_ref */
+
         switch (nextTok) {
             case Constants.STRING:
                 wsal.add(nextLex);
@@ -375,9 +384,12 @@ public class Parser {
         }
         if(running)output("\n");
     }
+    /**
+     * BNF: DISPLAY pvar_value_list
+     * BNF: pvar_value_list -> expr | pvar_value_list COMMA expr
+     */
     private void display() {
-        /** BNF: DISPLAY pvar_value_list */
-        /** BNF: pvar_value_list -> expr | pvar_value_list COMMA expr */
+
         if(running)output(expr());
         else expr();
         while (nextTok == Constants.COMMA){
@@ -388,9 +400,12 @@ public class Parser {
         }
         if (running)output("\n");
     }
+    /**
+     * BNF: INCREMENT name_ref
+     * BNF: name_ref -> IDENTIFIER
+     */
     private void increment() {
-        /** BNF: INCREMENT name_ref 
-            BNF: name_ref -> IDENTIFIER */
+
         if (nextTok == Constants.IDENT){
             wsal.add(nextLex);
             if (running){
@@ -407,9 +422,13 @@ public class Parser {
             error("Only valid identifiers can be incremented", scanner.getRow(), true);
         }
     }
+
+    /**
+     * BNF: DECREMENT name_ref
+     * BNF: name_ref -> IDENTIFIER
+     */
     private void decrement() {
-        /** BNF: DECREMENT name_ref 
-            BNF: name_ref -> IDENTIFIER */
+
         if (nextTok == Constants.IDENT){
             wsal.add(nextLex);
             if (running){
@@ -426,8 +445,11 @@ public class Parser {
             error("Only valid identifiers can be decremented", scanner.getRow(), true);
         }
     }
+    /**
+     * BNF: IF pcondition THEN pactions opt_else ENDIF
+     */
     private void ifStatement() {
-        /** BNF: IF pcondition THEN pactions opt_else ENDIF */
+
         boolean execute = pcondition();
         if (nextTok == Constants.THEN){
             wsal.add(nextLex);
@@ -454,8 +476,11 @@ public class Parser {
         }
         
     }
+    /**
+     * BNF: WHILE pcondition DO pactions ENDWHILE
+     */
     private void whileStatement() {
-        /** BNF: WHILE pcondition DO pactions ENDWHILE */
+
         int conditionIterations = scanner.count;
         boolean execute = pcondition();     //boolean set to value of conditional expression
         if (nextTok == Constants.DO){
@@ -511,11 +536,14 @@ public class Parser {
         else error("Invalid while loop declaration", scanner.getRow(), true);
     }
 
-    //Support for Actions Parsing:
+
+    /**
+     * Support for Actions Parsing:
+     * BNF: expr -> term
+     * | term PLUS term
+     * | term MINUS term
+     */
     private String expr() {
-        /** BNF: expr -> term
-            | term PLUS term
-            | term MINUS term */
         String s = term();
         while (nextTok == Constants.ADDOP || nextTok == Constants.SUBOP){
             int i = Integer.parseInt(s);
@@ -535,10 +563,13 @@ public class Parser {
         }
         return s;
     }
+
+    /** BNF: term -> punary
+     * | punary STAR punary
+     * | punary DIVOP punary
+     */
     private String term() {
-        /** BNF: term -> punary
-            | punary STAR punary
-            | punary DIVOP punary */
+
         String s = punary();
         while (nextTok == Constants.STAROP || nextTok == Constants.DIVOP){
             int i = Integer.parseInt(s);
@@ -559,8 +590,12 @@ public class Parser {
         }
         return s;
     }
+
+    /**
+     * BNF: punary -> element | MINUS element
+     */
     private String punary() {
-        /** BNF: punary -> element | MINUS element */
+
         if (nextTok == Constants.SUBOP){
             wsal.add(nextLex);
             scan();
@@ -569,9 +604,12 @@ public class Parser {
             return element();
         }
     }
+
+    /**
+     * where values are given out at execution time
+     * BNF: element -> IDENTIFIER | STRING	| NUMBER
+     */
     private String element() {
-        //This will be where values are given out at execution time
-        /** BNF: element -> IDENTIFIER | STRING	| NUMBER */
         switch (nextTok) {
             case Constants.STRING:
                 wsal.add(nextLex);
@@ -589,7 +627,6 @@ public class Parser {
                 scan();
                 return s2;
             default:
-//                scan();
                 return "";
         }
 
@@ -602,8 +639,11 @@ public class Parser {
         }
         return -1;
     }
+    /**
+     * BNF: pcondition -> expr eq_v expr
+     */
     private boolean pcondition() {
-        /** BNF: pcondition -> expr eq_v expr */
+
         String exp1 = expr();
         int operation = comparison();
         String exp2 = expr();
@@ -627,8 +667,11 @@ public class Parser {
                 return false;
         }
     }
+    /**
+     * BNF: eq_v -> EQUALS | GREATER THAN | LESS THAN
+     */
     private int comparison() {
-        /** BNF: eq_v -> EQUALS | GREATER THAN | LESS THAN */
+
         wsal.add(nextLex);
         int ret = nextTok;
         switch (nextTok){
@@ -647,9 +690,13 @@ public class Parser {
         }
         return ret;
     }
+
+    /**
+     * opt_else ->
+     * | ELSE pactions
+     */
     private void optionalElse(boolean dontExecute) {
-        /** opt_else ->
-	| ELSE pactions */
+
         if (dontExecute)
             running = false;
         if(!dontExecute)
@@ -658,9 +705,12 @@ public class Parser {
              actions();
          }
     }
-    
+
+    /**
+     * BNF: ENDFUN IDENTIFIER
+     * */
     private void endfun() {
-        /* BNF: ENDFUN IDENTIFIER */
+
         if (nextTok == Constants.IDENT || nextTok == Constants.MAIN){
             wsal.add(nextLex);
             flush();
