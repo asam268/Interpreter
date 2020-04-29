@@ -1,13 +1,14 @@
-/**
- * StringIdentifier.java
- * Noah Huck
- * CS4308
- * Section 03
- * 22 March 2019
- */
+/*
+        Author: Chukwufunayan Ojiagbaje, James Bozhkov, Asa Marshall
+        Class: CS 4308 W01
+        University: Kennesaw State University
+        Professor: Dr. Jose Garrido
+        Date: April 28th, 2020
 
-//package pkg;
 
+        Title: Semester Project Deliverable 3
+        SCL Language Interpreter
+*/
 public class StringIdentifier extends Identifier {
 
     private String value;

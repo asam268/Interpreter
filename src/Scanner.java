@@ -1,31 +1,36 @@
-/**
- * Scanner.java
- * Noah Huck
- * CS4308
- * Section 03
- * 25 February 2019
- */
+/*
+        Author: Chukwufunayan Ojiagbaje, James Bozhkov, Asa Marshall
+        Class: CS 4308 W01
+        University: Kennesaw State University
+        Professor: Dr. Jose Garrido
+        Date: April 28th, 2020
 
-//package pkg;
 
+        Title: Semester Project Deliverable 3
+        SCL Language Interpreter
+*/
+
+
+//imported packages for input/output and exception handling
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-
+//Defined a complete scanner class
 public class Scanner {
-
+    //Declaration of private variables
     private boolean eofReached;
     private boolean EOL;
     public int count = 0;
-
-    private int tokenType = 1;  //1 for kw, 2 for identifier, 3 for number, 4 for other, 5 for string
+    //Integer to represent token type: kw=1, identifiers=2, numbers=3, other=4, strings=5
+    private int tokenType = 1;
     private FileReader fr;
     private int row, col;
     private int errorCount;
 
-    public String currentLexeme;        //accessed to retrieve the current symbol
+    //An access variable used to retrieve the current symbol, public
+    public String currentLexeme;
 
     public Scanner(File in) {
         new Constants();
@@ -40,18 +45,19 @@ public class Scanner {
             System.out.println("File '" + in.getPath() + "' was not able to be found.");
         }
     }
-
-    public int nextToken() {     //numeric value produced is the token code for the next symbol
+    //numeric value produced is the token code for the next symbol
+    public int nextToken() {
         /* 
-            This value will not show up in test execution of scanner
-            It is substituted with a more readable word returned by the convertType() method.
+           This value will not show up in the test execution of scanner
+           It will be substitutes with a better readable word which is returned by the convertType() method.
         */
         count++;
         currentLexeme = getSymbol();
         if (eofReached)
             return 0;
         switch (tokenType) {
-            case 1:               //first case looks up potential keywords and returns a corresponding constant
+            //If first case,  potential keywords will be looked up and its corresponding constants will be returned
+            case 1:
                 int tokenCode = lookup(currentLexeme);
                 if (tokenCode == -1)
                     return 2;
@@ -60,17 +66,19 @@ public class Scanner {
                 return Constants.IDENT;
             case 3:
                 return Constants.NUMBER;
-            case 4:             //This case is looking for operators and accepted special characters
+            //This case looks for operators and accepted special characters
+            case 4:
                 return lookup(currentLexeme);
             case 5:
                 return Constants.STRING;
-            default:
-                return lookup(currentLexeme);   
             /*
-                Default statement should never be reached
-                getSymbol() function will handle errors so the tokenType variable
+                The Default statement shouldn't ever be reached
+                The getSymbol() function will handle errors.Becuase of this, the tokenType variable
                 should always be 1 through 4.
             */
+            default:
+                return lookup(currentLexeme);   
+
 
         }
 
@@ -85,7 +93,8 @@ public class Scanner {
     }
 
     private String getSymbol() {
-        tokenType = 1;          // type is assumed to be keyword initially
+        // The token type is assumed to initially be a kword
+        tokenType = 1;
         String symbol = "";
         if (EOL) {
             // Statement needed to account for new line immediately following a symbol
@@ -96,25 +105,28 @@ public class Scanner {
         }
 
         char c = getChar();
-
-        int state = 30;     //initial state arbitrarily 30
+        //The starting state arbitrarily 30
+        int state = 30;
 
         while (true) {
             OUTER:
             switch (state) {
                 case 30:
                     if ((int) c == 32) {
-                        c = getChar();          //skips over space characters
+                        // space characters are skipped
+                        c = getChar();
                         break;
-                    } else if ((int) c == 6000) {        // 6000 is the arbitrary end of file character.
+                    }
+                    // 6000 is the end of file character which is arbitrary.
+                    else if ((int) c == 6000) {
                         eofReached = true;
                         return "\\EOF";
                     } else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '<' || c == '>' || c == ',' || c == '=' || c == '"') {
                         tokenType = 4;
-                        state = 12;                     //when special characters are found, refer to state 12
+                        state = 12;//state 12 is reffered when a special character is detected
                         break;
-                    } else if (Character.isLetter(c)) {
-                        state = 15;                     //could be keyword or identifier
+                    } else if (Character.isLetter(c)) { //could be either an identifier or keyword
+                        state = 15;
                         break;
                     } else if (Character.isDigit(c)) {
                         state = 16;                     //number (integer) literal
@@ -246,17 +258,16 @@ public class Scanner {
     }
 
     private int lookup(String s) {
-        //function provides linear search of kwords array
-        //returns the corresponding constant from the kwConst array
-        //or -1 if the keyword is not found.
+        //Defined a function which linearly searches kwords arrays
+        //returns the corresponding constant from the kwConst array .If no keyword is found, a -1 is returned.
         for (int i = 0; i < kwords.length; i++) {
             if (s.compareTo(kwords[i]) == 0)
                 return kwConst[i];
         }
         return -1;
     }
-
-    private String[] kwords = { //Keyword list
+    //Declare a list of Keywords
+    private String[] kwords = {
             "begin",
             "decrement",
             "define",
@@ -291,7 +302,8 @@ public class Scanner {
             ",",
             "string"
     };
-    private int[] kwConst = { //Keyword constants
+    //Declared a list of keyword constants
+    private int[] kwConst = {
 
             Constants.BEGIN,
             Constants.DECREMENT,
@@ -337,10 +349,10 @@ public class Scanner {
     }
 
     public String convertType(int i) {
-        /* 
-            this function returns a string representation that corresponds to the token type
-            mainly for showing the type when using scanner by itself, as the parser
-            will only need the numeric value of the token
+
+        /* This is a function which returns a string representation corresponding to a token type.
+        This is mainly for displaying the type when using the scanner on its own, as the parses
+        will only need the  numeric value of the token
         */
         switch (i) {
             case -1:
