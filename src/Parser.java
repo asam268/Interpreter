@@ -45,10 +45,18 @@ public class Parser {
     }
     
     //Administrative Functions:
-    public void scan(){                    //method calls the scanner, leaves next token and lexeme in class variables
+
+    /**
+     * Calls scanner, stores next token and lexeme
+     */
+    public void scan(){
         nextTok = scanner.nextToken();
         nextLex = scanner.currentLexeme;
     }
+
+    /**
+     * @return End of File
+     */
     public boolean endOfFileReached(){      //public access to private end of file boolean
         return EOF;
     }
@@ -57,18 +65,9 @@ public class Parser {
      * Prints Error Messages
      * @param str   error method
      * @param loc   row
-     * @param skip
+     * @param skip  skip to next line
      */
     private void error(String str, int loc, boolean skip){
-        /**
-         * Method prints out error messages for the parse.
-         * First argument is error method that will be printed
-         * Second argument is row # where error occurred
-         * Third argument determines whether the parser should skip to the next line or not.
-         *
-         * Prints error messages
-         *
-         */
         System.err.println(str+"; line "+loc);
         if (skip){
             int x = scanner.getRow();
@@ -76,16 +75,24 @@ public class Parser {
                 scan();
             }
         }
-    }  
-    public void printIdTable(){     //administrative method to return complete ID table during testing
+    }
+
+    /**
+     * Prints complete ID table during testing
+     */
+    public void printIdTable(){
         idTable.forEach((i) -> {
             System.out.println(i.toString());
         });
     }
+
+    /**
+     * Searches identifier table for string
+     * @param str   string to look up
+     * @return      true if string exists in identifier table
+     */
     private boolean lookup(String str){
-        //Searches to see if string is already in identifier table
-        //returns true if it exists
-        activeIdentifierName = nextLex;     //allows whole class to remember most recently used ident name
+        activeIdentifierName = nextLex;
         for(Identifier id : idTable){
             if (str.compareTo(id.getName()) == 0){
                 //active identifier is set to index of most recently referenced identifier
@@ -96,7 +103,11 @@ public class Parser {
         }
         return false;
     }
-    public void flush(){        //Method prints the statement that has been built
+
+    /**
+     * Prints the statement that has been built
+     */
+    public void flush(){
         if (running)
             displayParsedLines = false;
         if (!displayParsedLines){
@@ -108,8 +119,13 @@ public class Parser {
             out = out.concat(s+" ");
         }
         System.out.println(out);
-        wsal.clear();           //ArrayList containing current statement is reset to allow for next statement generation.
+        wsal.clear();
     }
+
+    /**
+     *
+     * @param out
+     */
     public void output(String out){
         String s = out.replace("\"", "");
         System.out.print(s);
