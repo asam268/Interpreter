@@ -129,23 +129,23 @@ public class Scanner {
                         state = 15;
                         break;
                     } else if (Character.isDigit(c)) {
-                        state = 16;                     //number (integer) literal
+                        state = 16;                     //number literal (integer)
                     } else if ((int) c == 10 || (int) c == 13) {
-                        row++;                          //upon newline, keep track of position of reader
+                        row++;                          //  position of reader is being kept track of upon newline,
                         col = 0;
                         //***return "\\LF";
                         c = getChar();
                         break;
-                    } else if (eofReached)              //if eof reached without reading escape character 6000
-                        return "\\EOF";                 //the boolean will be true and eof will be returned
+                    } else if (eofReached)              //when end of file is reached if escape char 6000 isnt detected
+                        return "\\EOF";                 // boolean will be true and eof will be returned
                     else
-                        state = -5;                    //in the case that no other state is matched, error state reached
+                        state = -5;                    //Error state will be reached if no other state is matched
                     break;
                 case 12:
-                    //used for interpretting special characters
+                    //defined for special character interpretation
                     switch (c) {
+                        // handles string literals
                         case '"':
-                            //case handles string literals
                             tokenType = 5;
                             symbol = symbol.concat(Character.toString(c));
                             c = getChar();
@@ -154,18 +154,18 @@ public class Scanner {
                                 c = getChar();
                             }
                             if ((int) c == 10 || (int) c == 13) {
-                                //if newline found before closing ", error encountered
+                                //error if newline is detected before a closing " symbol
                                 state = -5;
                                 break OUTER;
                             }
                             symbol = symbol.concat(Character.toString(c));
                             return symbol;
                         case '>':
-                        case '<':       //These cases used for comparison operators
+                        case '<':       //defined cased for comparison
                         case '=':
                             symbol = symbol.concat(Character.toString(c));
                             c = getChar();
-                            if (c == '=') {      //looking for a second '=' after a comparison symbol
+                            if (c == '=') {      //will look for a reacurring '='
                                 symbol = symbol.concat(Character.toString(c));
                                 return symbol;
                             }
@@ -194,12 +194,12 @@ public class Scanner {
                     } else if ((int) c == 6000) {
                         return symbol;
                     } else {
-                        //error state envoked if character other than alphanumeric or whitespace encountered
+                        //error state will be envoked if a character other than alphanumeric/ whitespace encountered
                         state = -5;
                         break;
                     }
+                    //this case builds integer literals
                 case 16:
-                    //case for building integer literals
                     tokenType = 3;
                     symbol = symbol.concat(Character.toString(c));
                     c = getChar();
@@ -216,7 +216,7 @@ public class Scanner {
                     } else if ((int) c == 6000) {
                         return symbol;
                     } else {
-                        //error state envoked if character other than digit or whitespace encountered
+                        //error state envoked if character other than digit or whitespace/encountered
                         state = -5;
                         break;
                     }
@@ -233,7 +233,7 @@ public class Scanner {
                     }
                     return getSymbol();
                 default:
-                    //Shouldn't be invoked, but needed for mandatory method return and testing
+                    //Default shouldn't be invoked, but needed for mandatory method return and testing
                     return "\\DEF";
             }
         }       // End of While  
