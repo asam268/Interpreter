@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class Parser {
     
-    Scanner scanner;                        //variable which references scanner object from 1st deliverable
-    boolean EOF;                            // boolean value to indicate when end of file has been reached
+    private Scanner scanner;                        //variable which references scanner object from 1st deliverable
+    private boolean EOF;                            // boolean value to indicate when end of file has been reached
     private int nextTok;                //stores the most recent token value from scanner
     private String nextLex;             //stores the most recent lexeme from the scanner
     protected ArrayList<Identifier> idTable;        //table to store identifiers as they're created. Also serves as memory at execution time
@@ -24,11 +24,11 @@ public class Parser {
     private AssignmentStatement assignmentStatement;        //object used as arbitrary reference for new assignment statements
     private final File f;
     
-    java.util.Scanner inputHandler;
+    private java.util.Scanner inputHandler;
     
-    boolean running = false;
-    boolean displayParsedLines = true;
-    boolean whileSkip = false;
+    private boolean running = false;
+    private boolean displayParsedLines = true;
+    private boolean whileSkip = false;
     
     //Constructor:
     public Parser(String in){
@@ -52,12 +52,22 @@ public class Parser {
     public boolean endOfFileReached(){      //public access to private end of file boolean
         return EOF;
     }
+
+    /**
+     * Prints Error Messages
+     * @param str
+     * @param loc
+     * @param skip
+     */
     private void error(String str, int loc, boolean skip){
         /**
          * Method prints out error messages for the parse.
          * First argument is error method that will be printed
          * Second argument is row # where error occurred
          * Third argument determines whether the parser should skip to the next line or not.
+         *
+         * Prints error messages
+         *
          */
         System.err.println(str+"; line "+loc);
         if (skip){
