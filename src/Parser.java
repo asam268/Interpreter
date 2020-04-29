@@ -26,7 +26,7 @@ public class Parser {
     
     private java.util.Scanner inputHandler;
     
-    private boolean running = false;
+    boolean running = false;
     private boolean displayParsedLines = true;
     private boolean whileSkip = false;
     
@@ -55,8 +55,8 @@ public class Parser {
 
     /**
      * Prints Error Messages
-     * @param str
-     * @param loc
+     * @param str   error method
+     * @param loc   row
      * @param skip
      */
     private void error(String str, int loc, boolean skip){
