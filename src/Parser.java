@@ -14,16 +14,16 @@ import java.util.ArrayList;
 
 public class Parser {
     
-    private Scanner scanner;                        //variable which references scanner object from 1st deliverable
-    private boolean EOF;                            // boolean value to indicate when end of file has been reached
-    private int nextTok;                //stores the most recent token value from scanner
-    private String nextLex;             //stores the most recent lexeme from the scanner
+    private Scanner scanner;                        //scanner object
+    private boolean EOF;                            //end of file
+    private int nextTok;                            //most recent token from scanner
+    private String nextLex;                         //most recent lexeme from scanner
     protected ArrayList<Identifier> idTable;        //table to store identifiers as they're created. Also serves as memory at execution time
-    private final ArrayList<String> wsal;       //ArrayList where current statement is being built (working statement array list)
-    private int activeIdentifier;           //Stores the index in idTable of the most recent identifier that has been called using lookup()
-    private String activeIdentifierName;    //for use in declaration of identifiers at execution time
-    private AssignmentStatement assignmentStatement;        //object used as arbitrary reference for new assignment statements
-    private final File f;
+    private final ArrayList<String> wsal;           //ArrayList where current statement is being built (working statement array list)
+    private int activeIdentifier;                   //Stores the index in idTable of the most recent identifier that has been called using lookup()
+    private String activeIdentifierName;            //for use in declaration of identifiers at execution time
+    private AssignmentStatement assignmentStatement;//object used as arbitrary reference for new assignment statements
+    private final File f;                           //File object
     
     private java.util.Scanner inputHandler;
     
@@ -33,7 +33,6 @@ public class Parser {
     
     //Constructor:
     public Parser(String in){
-        //constructor initializing class variables
         new Constants();
         f = new File(in);
         inputHandler = new java.util.Scanner(System.in);
@@ -44,8 +43,6 @@ public class Parser {
         this.wsal = new ArrayList();
         
     }
-    
-    //Administrative Functions:
 
     /**
      * Calls scanner, stores next token and lexeme
@@ -133,13 +130,16 @@ public class Parser {
     }
 
     //Parsing Functions:
+
+    /**
+     * function parses for an entire function
+     * Derived BNF for this method:
+     *      FUNCTION IDENTIFIER IS
+     *      ( | CONSTANTS data_declarations) VARIABLES data_declarations (  | STRUCT data_declarations)
+     *      BEGIN pactions ENDFUN IDENTIFIER
+     *
+     */
     public void parseProgram(){
-        //function parses for an entire function
-        /* Derived BNF for this method:
-           FUNCTION IDENTIFIER IS 
-            ( | CONSTANTS data_declarations) VARIABLES data_declarations (  | STRUCT data_declarations)
-            BEGIN pactions ENDFUN IDENTIFIER
-        */
         scan();
         if (nextTok == Constants.FUNCTION){
             wsal.add(nextLex);
@@ -496,7 +496,7 @@ public class Parser {
                 actions();
             }
             if (execute){
-                /** 
+                /*
                  * New parser instance created to come back to beginning of while loop
                  * New Instance will not print anything or execute any code by default
                  * New instance is given values for identifiers from current instance
@@ -506,7 +506,7 @@ public class Parser {
                 p.idTable = this.idTable;
                 for (int i = 0; i<conditionIterations; i++)
                     p.scan();
-                /**
+                /*
                  * Upon arriving at original conditional expression, it is evaluated again
                  * If true, while statement is parsed and executed again
                  * identifiers from this instance are given values from new instance
