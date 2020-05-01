@@ -1,7 +1,15 @@
-/**
- * StringIdentifier.java
- * 
- */
+
+/*
+        Author: Chukwufunayan Ojiagbaje, James Bozhkov, Asa Marshall
+        Class: CS 4308 W01
+        University: Kennesaw State University
+        Professor: Dr. Jose Garrido
+        Date: April 28th, 2020
+
+
+        Title: Semester Project Deliverable 3
+        SCL Language Interpreter
+*/
 
 //Method class Identifier implementation
 public class StringIdentifier extends Identifier {

@@ -1,18 +1,23 @@
-/**
- * Constants.java
- * Noah Huck
- * CS4308
- * Section 03
- * 18 March 2019
- */
+/*
+        Author: Chukwufunayan Ojiagbaje, James Bozhkov, Asa Marshall
+        Class: CS 4308 W01
+        University: Kennesaw State University
+        Professor: Dr. Jose Garrido
+        Date: April 28th, 2020
 
-//package pkg;
 
+        Title: Semester Project Deliverable 3
+        SCL Language Interpreter
+*/
+
+// Defined a class constants which holds constant values for keywords
 public class Constants {
-    // class holds constant values for keywords
+
+    // Declared a private instructor to prevent instantiation
     public Constants(){
     }
-    // constructor made private to prevent instantiation
+
+    //declared a set of keyword constants
     final public static int EOF = 0;
     
     final public static int IDENT = 2;
