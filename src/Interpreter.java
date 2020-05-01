@@ -1,29 +1,19 @@
 <<<<<<< HEAD
-/**
- * Author: Chukwufunayan Ojiagbaje, James Bozhkov, Asa Marshall
-=======
 /*
         Author: Chukwufunayan Ojiagbaje, James Bozhkov, Asa Marshall
->>>>>>> 624a1293640bd67a59b058baf6d1805fa837409c
         Class: CS 4308 W01
         University: Kennesaw State University
         Professor: Dr. Jose Garrido
         Date: April 28th, 2020
-<<<<<<< HEAD
+
 
 
         Title: Semester Project Deliverable 3
         SCL Language Interpreter
  */
 
-//Interpreter class
-=======
 
 
-        Title: Semester Project Deliverable 3
-        SCL Language Interpreter
-*/
->>>>>>> 624a1293640bd67a59b058baf6d1805fa837409c
 
 public class Interpreter {
 
