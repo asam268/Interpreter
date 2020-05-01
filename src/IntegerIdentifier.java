@@ -1,38 +1,40 @@
 /**
  * IntegerIdentifier.java
- * Noah Huck
- * CS4308
- * Section 03
- * 22 March 2019
+ * 
  */
-
-//package pkg;
 
 public class IntegerIdentifier extends Identifier{
 
     private int value;
-    //class serves as template for Integer Identifiers in IDTable of parser
+    //public class that serves as a template for the Integer Identifiers in IDTable of the parser
     public IntegerIdentifier(String name, int type, int value) {
-        super(name, type);
-        this.value = value;
+        super(name, type); //String and integer declaration
+        this.value = value;//set this.value to value
     }
     @Override
+    //Method for getting value which returns an integer amount from user
     public String getValue(){
         return Integer.toString(value);
     }
     @Override
+    //Method for setting a newValue String output
     public void setValue(String newValue){
         value = Integer.parseInt(newValue);
     }
     @Override
+    //Method for getting output from String declaration
+    //First set of accessor/mutator that returns value as String
     public String toString(){
+        //expected output from user input which returns string value
         return "["+name+","+type+","+value+"]";
     }
-    // second set of accessor/mutator for retrieving/setting value as integer not string
+    //Method which returns an integer value
+    //Second set of accessor/mutator that returns value as integer
     public int getIntValue(){
         return value;
     }
+    //Method for setting integer value
     public void setIntValue(int newValue){
-        value = newValue;
+        value = newValue; //set value to newValue
     }
 }
