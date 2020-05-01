@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
         Author: Chukwufunayan Ojiagbaje, James Bozhkov, Asa Marshall
         Class: CS 4308 W01
